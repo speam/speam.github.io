@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>URL编码和解码 - IMO&#039;s Blog</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="IMO&#039;s Blog"><meta name="msapplication-TileImage" content="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/avatar4.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="IMO&#039;s Blog"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta description=""><meta property="og:type" content="blog"><meta property="og:title" content="URL编码和解码"><meta property="og:url" content="http://evilimo.com/2020/10/22/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/URL%E7%BC%96%E7%A0%81%E5%92%8C%E8%A7%A3%E7%A0%81%E8%BF%87%E7%A8%8B/"><meta property="og:site_name" content="IMO&#039;s Blog"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/1-20201022115251200.jpeg"><meta property="og:image" content="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/1-20201022115251200-20201022115315048.jpeg"><meta property="og:image" content="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/1-20201022115500532.png"><meta property="og:image" content="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/1-20201022115510919.png"><meta property="article:published_time" content="2020-10-22T03:28:32.594Z"><meta property="article:modified_time" content="2020-10-22T03:57:34.810Z"><meta property="article:author" content="IMO"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/1-20201022115251200.jpeg"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://evilimo.com/2020/10/22/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/URL%E7%BC%96%E7%A0%81%E5%92%8C%E8%A7%A3%E7%A0%81%E8%BF%87%E7%A8%8B/"},"headline":"IMO's Blog","image":["https://cdn.jsdelivr.net/gh/speam/blogImgs@main/1-20201022115500532.png","https://cdn.jsdelivr.net/gh/speam/blogImgs@main/1-20201022115510919.png"],"datePublished":"2020-10-22T03:28:32.594Z","dateModified":"2020-10-22T03:57:34.810Z","author":{"@type":"Person","name":"IMO"},"description":""}</script><link rel="canonical" href="http://evilimo.com/2020/10/22/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/URL%E7%BC%96%E7%A0%81%E5%92%8C%E8%A7%A3%E7%A0%81%E8%BF%87%E7%A8%8B/"><link rel="icon" href="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/avatar4.png"><link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/font-awesome/5.4.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.loli.net/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><!--!--><!--!--><meta name="generator" content="Hexo 5.2.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/imglogo.png" alt="IMO&#039;s Blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">首页</a><a class="navbar-item" href="/archives">归档</a><a class="navbar-item" href="/categories">分类</a><a class="navbar-item" href="/about">关于</a></div><div class="navbar-end"><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-10-22T03:28:32.594Z" title="2020-10-22T03:28:32.594Z">2020-10-22</time>发表</span><span class="level-item"><time dateTime="2020-10-22T03:57:34.810Z" title="2020-10-22T03:57:34.810Z">2020-10-22</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a></span></div></div><h1 class="title is-3 is-size-4-mobile">URL编码和解码</h1><div class="content"><hr>
+<a id="more"></a>
+
+<h2 id="一、URL含义"><a href="#一、URL含义" class="headerlink" title="一、URL含义"></a>一、URL含义</h2><h3 id="1、URL定义"><a href="#1、URL定义" class="headerlink" title="1、URL定义"></a>1、URL定义</h3><p>URL 是Uniform Resource Locator 的缩写，统一资源定位符，对可以从互联网上得到的资源的位置和访问方法的一种简洁的表示，是互联网上标准资源的地址。互联网上的每个文件都有一个唯一的URL，它包含的信息指出文件的位置以及浏览器应该怎么处理它。基本URL包含模式（或称协议）、服务器名称（或IP地址）、路径和文件名、参数，如“协议：//授权/路径查询？参数”。</p>
+<p><strong>URL 与 URI</strong> 很多人会混淆这两个名词。 URL：(Uniform/Universal Resource Locator 的缩写，统一资源定位符)。 URI：(Uniform Resource Identifier 的缩写，统一资源标识符)。URI 属于 URL 更低层次的抽象，一种字符串文本标准。URL 是 URI 的一个子集。 URI 表示请求服务器的路径，定义这么一个资源。而 URL 同时说明要如何访问这个资源（http://）。 </p>
+<p><strong>URI结构</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">foo:&#x2F;&#x2F;example.com:8042&#x2F;over&#x2F;there?name&#x3D;ferret#nose</span><br><span class="line"></span><br><span class="line">  \_&#x2F; \______________&#x2F; \________&#x2F;\_________&#x2F; \__&#x2F;</span><br><span class="line"></span><br><span class="line">   |         |              |         |        |</span><br><span class="line"></span><br><span class="line"> scheme     authority      path      query   fragment</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2、URL字符编码表"><a href="#2、URL字符编码表" class="headerlink" title="2、URL字符编码表"></a>2、URL字符编码表</h3><p>1、<a target="_blank" rel="noopener" href="https://www.w3school.com.cn/tags/html_ref_urlencode.html">URL 编码 - 从 %00 到 %ff</a></p>
+<p>2、<a target="_blank" rel="noopener" href="http://www.mamicode.com/info-detail-1680849.html">HTML特殊字符编码对照表</a></p>
+<h2 id="二、URL-编码"><a href="#二、URL-编码" class="headerlink" title="二、URL 编码"></a>二、URL 编码</h2><h3 id="1、为什么要编码转义"><a href="#1、为什么要编码转义" class="headerlink" title="1、为什么要编码转义"></a>1、为什么要编码转义</h3><p>推荐阅读：<a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2007/10/ascii_unicode_and_utf-8.html">字符编码：ASCII、Unicode 和 UTF-8 的区别</a></p>
+<p>世界上存在着多种编码方式，同一个二进制数字可以被解释成不同的符号，不同的编码方式，解码出来就是乱码，造成数据传输和阅读的极大障碍。互联网的来临，必须要统一字符编码，Unicode（统一码、万国码、单一码）作为计算机科学领域里的一项业界标准应运而生。Unicode 是互联网统一的符号集，只规定了符号唯一的二进制代码值，却没有规定这个二进制代码应该如何存储。</p>
+<p>UTF-8是一种针对Unicode的可变长度字符编码，UTF-8用1到4个字节编码Unicode字符，在互联网上使用最广的一种 Unicode 的实现方式。其他实现方式还包括 UTF-16（字符用两个字节或四个字节表示）和 UTF-32（字符用四个字节表示），不过在互联网上基本不用。 <strong>注意：UTF-8 是 Unicode 的实现方式之一。</strong> 如 中 字:</p>
+<p>Unicode码值： <code>\u4e2d</code></p>
+<p>URL编码（UTF-8）： <code>%e4%b8%ad</code></p>
+<h3 id="2、URL编码规则"><a href="#2、URL编码规则" class="headerlink" title="2、URL编码规则"></a>2、URL编码规则</h3><p>Url编码通常也被称为百分号编码，编码方式非常简单，使用%百分号加上两位的字符——0123456789ABCDEF——代表一个字节的十六进制形式。Url编码默认使用的字符集是US-ASCII。例如a在US-ASCII码中对应的字节是0x61，那么Url编码之后得到的就是%61，我们在地址栏上输入 <code>http://g.cn/search?q=%61%62%63</code> ，实际上就等同于在google上搜索abc了。又如@符号在ASCII字符集中对应的字节为0x40，经过Url编码之后得到的是%40。</p>
+<p>对于非ASCII字符，需要使用ASCII字符集的超集进行编码得到相应的字节，然后对每个字节执行百分号编码。对于Unicode字符，RFC文档建议使用utf-8对其进行编码得到相应的字节，然后对每个字节执行百分号编码。如”中文”使用UTF-8字符集得到的字节为0xE4 0xB8 0xAD 0xE6 0x96 0x87，经过Url编码之后得到”%E4%B8%AD%E6%96%87”。</p>
+<h3 id="3、URL不需要编码的字符"><a href="#3、URL不需要编码的字符" class="headerlink" title="3、URL不需要编码的字符"></a>3、URL不需要编码的字符</h3><p>1、英文字母（a-z A-Z）</p>
+<p>2、数字（0-9）</p>
+<p>3、 -   _   .  ~     4个特殊字符</p>
+<p>4、所有保留字符，RFC3986中指定了以下字符为保留字符（英文字符）: <code>! * &#39; ( ) ; : @ &amp; = + $ , / ? # [ ]</code></p>
+<p>5、编码标记符号 %</p>
+<h3 id="4、URL需要编码的字符"><a href="#4、URL需要编码的字符" class="headerlink" title="4、URL需要编码的字符"></a>4、URL需要编码的字符</h3><h4 id="4-1、非URL定义的字符"><a href="#4-1、非URL定义的字符" class="headerlink" title="4.1、非URL定义的字符"></a>4.1、非URL定义的字符</h4><p>如中文字符、希腊文字符，拉丁文字符等。</p>
+<h4 id="4-2、会引起歧义的保留字符"><a href="#4-2、会引起歧义的保留字符" class="headerlink" title="4.2、会引起歧义的保留字符"></a>4.2、会引起歧义的保留字符</h4><p>URL 拼接参数或路径设置时，拼接的普通字符串中含有保留字符，会引起歧义的情况。URL 参数字符串中使用 key=value 这样的键值对形式来传参，键值对之间以 &amp; 符号分隔，如宝洁公司的简称为P&amp;G，假设需要当做参数去传递，name=P&amp;G&amp;t=1450591802326，因为参数中多了一个&amp;势必会造成接收 URL 的服务器解析错误，因此必须将引起歧义的 &amp; 符号进行转义编码。</p>
+<p><strong>部分保留字符及其URL编码</strong></p>
+<table>
+<thead>
+<tr>
+<th>字符</th>
+<th>用法描述</th>
+<th>编码</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>+</td>
+<td>表示空格（在URL中不能使用空格）</td>
+<td>%2B</td>
+</tr>
+<tr>
+<td>空格</td>
+<td>URL中的空格可以用+号或者编码</td>
+<td>%20</td>
+</tr>
+<tr>
+<td>/</td>
+<td>分隔目录和子目录</td>
+<td>%2F</td>
+</tr>
+<tr>
+<td>?</td>
+<td>分隔实际的URL和参数</td>
+<td>%3F</td>
+</tr>
+<tr>
+<td>#</td>
+<td>表示书签或锚点</td>
+<td>%23</td>
+</tr>
+<tr>
+<td>&amp;</td>
+<td>URL中指定的参数间的分隔符</td>
+<td>%26</td>
+</tr>
+<tr>
+<td>=</td>
+<td>URL中指定的参数的值</td>
+<td>%3D</td>
+</tr>
+<tr>
+<td>%</td>
+<td>百分号本身用作对不安全字符进行编码时使用的特殊字符，因此本身需要编码</td>
+<td>%25</td>
+</tr>
+</tbody></table>
+<p>如果需要在URL中用到特殊字符或中文字符，需要将这些特殊字符换成相应的十六进制的值。</p>
+<h2 id="三、iOS端URL具体编码处理"><a href="#三、iOS端URL具体编码处理" class="headerlink" title="三、iOS端URL具体编码处理"></a>三、iOS端URL具体编码处理</h2><h3 id="1、URL编码和解码是成对"><a href="#1、URL编码和解码是成对" class="headerlink" title="1、URL编码和解码是成对"></a>1、URL编码和解码是成对</h3><p>URL编码和解码必须是成对出现的。</p>
+<p>这四种种字符后，URL编码后的值还是它本身：</p>
+<p>1、英文字母（a-z A-Z）</p>
+<p>2、数字（0-9）</p>
+<p>3、特殊字符（ -_.）</p>
+<p>4、部分保留字符（英文字符）: <code>! * &#39; ( ) ; : @ &amp; = + $ , / ?</code></p>
+<p><strong>说明</strong>：<code>~ # []</code> 这四个字符是否被转码成百分号编码，因系统不同会有不同。</p>
+<p>URL字符编码使用%百分号加上两位的字符——0123456789ABCDEF——代表一个字节的十六进制形式。因编码后的值含有 <code>%</code> 保留字符。再次编译% 会编译成 <code>%25</code> 。</p>
+<p>例如： &amp;</p>
+<p>第一次URL编码后：%26</p>
+<p>第二次URL编码后：%2526</p>
+<p>第三次URL编码后：%252526</p>
+<p>正常解码逻辑：</p>
+<p>第一次URL解码后：%2526</p>
+<p>第二次URL解码后：%26</p>
+<p>第三次URL解码后：&amp;</p>
+<h3 id="2、URL是怎么拆解的"><a href="#2、URL是怎么拆解的" class="headerlink" title="2、URL是怎么拆解的"></a>2、URL是怎么拆解的</h3><p>我们看一个常见的接口请求示例：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/1-20201022115251200.jpeg" alt="img"></p>
+<p>一般会根据 <code>://</code>、<code>:</code> 、 <code>/</code> 、 <code>?</code>、 <code>&amp;</code>、<code>=</code> 等拆分出请求的协议、服务器名称（或IP地址）、端口号、路径和文件名、参数名、参数值等。</p>
+<h3 id="3、在组装URL的什么阶段进行URL编码"><a href="#3、在组装URL的什么阶段进行URL编码" class="headerlink" title="3、在组装URL的什么阶段进行URL编码"></a>3、在组装URL的什么阶段进行URL编码</h3><p>我们看一个常见的接口请求示例：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/1-20201022115251200-20201022115315048.jpeg" alt="img"></p>
+<table>
+<thead>
+<tr>
+<th>字符串</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>://</td>
+<td>协议符号</td>
+</tr>
+<tr>
+<td>/</td>
+<td>分隔目录和子目录</td>
+</tr>
+<tr>
+<td>测试</td>
+<td>代表需要编译处理的路径</td>
+</tr>
+<tr>
+<td>？</td>
+<td>分隔实际的URL和参数</td>
+</tr>
+<tr>
+<td>&amp;</td>
+<td>URL中指定的参数间的分隔符</td>
+</tr>
+<tr>
+<td>=</td>
+<td>URL中指定的参数的值</td>
+</tr>
+<tr>
+<td>搜&amp;索</td>
+<td>搜索词含有中文，含有保留字段，需要编译</td>
+</tr>
+<tr>
+<td>&amp;times</td>
+<td>是key的一部分，不应该被编译，若多一次编译，会编译为 x</td>
+</tr>
+</tbody></table>
+<p>绿色字体是保留字符，都有特殊的含义，是不应该是被编码的。 红色字体必须要要编译的部分。 黄色背景的字符串，不应该被编译。 若以上操作不正确，会影响整个URL的解析。</p>
+<p><strong>常见的拼接过程</strong>：</p>
+<p>1、先拼接实际的请求地址 <code>https://www.baidu.com/s/测@试?</code></p>
+<p>2、再拼接参数字符串 <code>wd=搜&amp;索&amp;timestamp=32424242423</code></p>
+<p>3、将1、2合并凭借成一个网址字符串。</p>
+<p>4、将网址字符串转为NSURL 实例。</p>
+<p><strong>分析</strong></p>
+<p>1、因 <code>测@试</code> 含有中文和保留字符@，需要在步骤1之前，先将 <code>测@试</code> 编码为 <code>%e6%b5%8b%40%e8%af%95</code> ，再拼接到<code>https://www.baidu.com/s/%e6%b5%8b%40%e8%af%95?</code></p>
+<p>2、因 <code>搜&amp;索</code> 含有中文和保留字符&amp; ,&amp; 会影响参数解析。需要先<code>搜&amp;索</code> 编码为 <code>%e6%90%9c%26%e7%b4%a2</code> ，再拼接到<code>wd=%e6%90%9c%26%e7%b4%a2&amp;timestamp=32424242423</code></p>
+<p>3、因请求地址和参数列表已经编码过，拼接后的完整请求不应该再次编译。若再次编译 则会因含有 <code>&amp;times</code> 编译为 x 。</p>
+<p><strong>小结</strong></p>
+<p>上面我们分别编码特殊字符后，最后拼接到一起。也有部分写法是拼接后再统一编码处理的。但因请求路径、请求参数中都可能含有保留字符&amp;、=或中文等特殊字符，造成请求地址解析错误。建议在路径和参数拼接前对路径、参数名、参数值等先行统一编码处理，再行拼接。拼接好后不要再行编码，转为NSURL实例，发送请求。</p>
+<h3 id="4、可用的编码和解码API"><a href="#4、可用的编码和解码API" class="headerlink" title="4、可用的编码和解码API"></a>4、可用的编码和解码API</h3><p>iOS端生成NSURL实例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NSURL *url &#x3D; [NSURL URLWithString:urlString];</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意： urlString 中含有中文字符等非定URL限定字符时，创建的NSURL对象会失败，url返回为nil。</p>
+</blockquote>
+<h4 id="URL编码"><a href="#URL编码" class="headerlink" title="URL编码"></a>URL编码</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *urlStr = <span class="string">@&quot;你好0123456789abcxyzABCXYZ-_.~&amp;!*&#x27;();:@&amp;=+$,/?#[]% &quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//方式一【推荐】</span></span><br><span class="line"><span class="built_in">NSString</span> *encodingString = [urlStr stringByAddingPercentEscapesUsingEncoding:<span class="built_in">NSUTF8StringEncoding</span>];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;url编码1-1 = %@&quot;</span>,encodingString);</span><br><span class="line"></span><br><span class="line"><span class="comment">//方式二：</span></span><br><span class="line"><span class="built_in">NSString</span> *encodeStr3 = [urlStr stringByAddingPercentEncodingWithAllowedCharacters:[<span class="built_in">NSCharacterSet</span> URLQueryAllowedCharacterSet]];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;url编码3-1 = %@&quot;</span>,encodeStr3);</span><br><span class="line"></span><br><span class="line"><span class="comment">//方式三：自定义字符集 ABC-_~.!*&#x27;();:@&amp;=+ $,/?%#[]  编码对比</span></span><br><span class="line"><span class="built_in">NSString</span> *encodeStr2 = (<span class="built_in">NSString</span> *)<span class="built_in">CFBridgingRelease</span>(<span class="built_in">CFURLCreateStringByAddingPercentEscapes</span>(kCFAllocatorDefault, (<span class="built_in">CFStringRef</span>)urlStr, <span class="literal">NULL</span>, (<span class="built_in">CFStringRef</span>)<span class="string">@&quot;ABC-_~.!*&#x27;();:=+ $,/?%#[]&quot;</span>, kCFStringEncodingUTF8));</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;url编码2-2 = %@&quot;</span>,encodeStr2);</span><br><span class="line">  </span><br><span class="line"><span class="comment">//方式四：自定义字符不需要编译的字符集，为空字符集，将所有字符用百分号编码</span></span><br><span class="line"><span class="built_in">NSCharacterSet</span> *characterSet = [<span class="built_in">NSCharacterSet</span> characterSetWithCharactersInString:<span class="string">@&quot;&quot;</span>];</span><br><span class="line"><span class="built_in">NSString</span> *encodeStr4 = [urlStr stringByAddingPercentEncodingWithAllowedCharacters:characterSet];</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;url编码3-2 = %@&quot;</span>,encodeStr4);</span><br></pre></td></tr></table></figure>
+
+<p>打印结果是</p>
+<p><img src="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/1-20201022115500532.png" alt="img"></p>
+<p>网上常见的字符集枚举说明（供参考）:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">URLFragmentAllowedCharacterSet  &quot;#%&lt;&gt;[\]^&#96;&#123;|&#125;</span><br><span class="line">URLHostAllowedCharacterSet      &quot;#%&#x2F;&lt;&gt;?@\^&#96;&#123;|&#125;</span><br><span class="line">URLPasswordAllowedCharacterSet  &quot;#%&#x2F;:&lt;&gt;?@[\]^&#96;&#123;|&#125;</span><br><span class="line">URLPathAllowedCharacterSet      &quot;#%;&lt;&gt;?[\]^&#96;&#123;|&#125;</span><br><span class="line">URLQueryAllowedCharacterSet     &quot;#%&lt;&gt;[\]^&#96;&#123;|&#125;</span><br><span class="line">URLUserAllowedCharacterSet      &quot;#%&#x2F;:&lt;&gt;?@[\]^&#96;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="URL解码"><a href="#URL解码" class="headerlink" title="URL解码"></a>URL解码</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//上段代码的结果为encodeStr3入参</span></span><br><span class="line"><span class="built_in">NSString</span> *decodedStr3 = [encodeStr3 stringByRemovingPercentEncoding];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;url编码3-1 = %@&quot;</span>,decodedStr3);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>打印结果是</p>
+<p><img src="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/1-20201022115510919.png" alt="img"></p>
+<h2 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h2><p>1、在URL组装拼接前对各个部分的可能会引起歧义的字符串进行全量UTF-8编码。</p>
+<p>2、在需要解码的地方，需要先分拆字符串，再分段解码使用。</p>
+<p>3、在需要将已组装的数据，进行重组时，需要先拆解，分别解码后再编码，最后再重组。</p>
+<p>4、服务端会对请求进行UTF-8解码一次，请确保请求中的字符只进行一次UTF-8编码。</p>
+</div><!--!--></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2020/10/22/iOS%C2%B7%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/04-%E7%B1%BB%E7%9A%84%E6%9C%AC%E8%B4%A8/"><span class="level-item">04 - 类的本质</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><!--!--></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1 is-sticky"><div class="card widget" id="toc" style="max-height: 1400px;overflow: auto;"><div class="card-content"><div class="menu"><h3 class="menu-label">目录</h3><ul class="menu-list"><li><a class="level is-mobile" href="#一、URL含义"><span class="level-left"><span class="level-item">一、URL含义</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#1、URL定义"><span class="level-left"><span class="level-item">1、URL定义</span></span></a></li><li><a class="level is-mobile" href="#2、URL字符编码表"><span class="level-left"><span class="level-item">2、URL字符编码表</span></span></a></li></ul></li><li><a class="level is-mobile" href="#二、URL-编码"><span class="level-left"><span class="level-item">二、URL 编码</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#1、为什么要编码转义"><span class="level-left"><span class="level-item">1、为什么要编码转义</span></span></a></li><li><a class="level is-mobile" href="#2、URL编码规则"><span class="level-left"><span class="level-item">2、URL编码规则</span></span></a></li><li><a class="level is-mobile" href="#3、URL不需要编码的字符"><span class="level-left"><span class="level-item">3、URL不需要编码的字符</span></span></a></li><li><a class="level is-mobile" href="#4、URL需要编码的字符"><span class="level-left"><span class="level-item">4、URL需要编码的字符</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#4-1、非URL定义的字符"><span class="level-left"><span class="level-item">4.1、非URL定义的字符</span></span></a></li><li><a class="level is-mobile" href="#4-2、会引起歧义的保留字符"><span class="level-left"><span class="level-item">4.2、会引起歧义的保留字符</span></span></a></li></ul></li></ul></li><li><a class="level is-mobile" href="#三、iOS端URL具体编码处理"><span class="level-left"><span class="level-item">三、iOS端URL具体编码处理</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#1、URL编码和解码是成对"><span class="level-left"><span class="level-item">1、URL编码和解码是成对</span></span></a></li><li><a class="level is-mobile" href="#2、URL是怎么拆解的"><span class="level-left"><span class="level-item">2、URL是怎么拆解的</span></span></a></li><li><a class="level is-mobile" href="#3、在组装URL的什么阶段进行URL编码"><span class="level-left"><span class="level-item">3、在组装URL的什么阶段进行URL编码</span></span></a></li><li><a class="level is-mobile" href="#4、可用的编码和解码API"><span class="level-left"><span class="level-item">4、可用的编码和解码API</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#URL编码"><span class="level-left"><span class="level-item">URL编码</span></span></a></li><li><a class="level is-mobile" href="#URL解码"><span class="level-left"><span class="level-item">URL解码</span></span></a></li></ul></li></ul></li><li><a class="level is-mobile" href="#四、总结"><span class="level-left"><span class="level-item">四、总结</span></span></a></li></ul></div></div><style>.menu-list > li > a.is-active + .menu-list { display: block; }.menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/imglogo.png" alt="IMO&#039;s Blog" height="28"></a><p class="is-size-7"><span>&copy; 2020 IMO</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/speam"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" async></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>
