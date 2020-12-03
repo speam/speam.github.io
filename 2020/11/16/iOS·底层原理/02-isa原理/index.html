@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>02 - isa原理 - IMO&#039;s Blog</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="IMO&#039;s Blog"><meta name="msapplication-TileImage" content="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/avatar4.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="IMO&#039;s Blog"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta description=""><meta property="og:type" content="blog"><meta property="og:title" content="02 - isa原理"><meta property="og:url" content="http://evilimo.com/2020/11/16/iOS%C2%B7%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/02-isa%E5%8E%9F%E7%90%86/"><meta property="og:site_name" content="IMO&#039;s Blog"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/16007786247376.jpg"><meta property="og:image" content="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/16007786706178.jpg"><meta property="og:image" content="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/16007786783257.jpg"><meta property="og:image" content="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/16007786920476.jpg"><meta property="og:image" content="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/16007787059086.jpg"><meta property="og:image" content="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/16007787933363.jpg"><meta property="og:image" content="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/1-20201203115701181.png"><meta property="og:image" content="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/1-20201203115713735.png"><meta property="og:image" content="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/1-20201203115748854.png"><meta property="og:image" content="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/1-20201203115754021.png"><meta property="og:image" content="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/1-20201203115806235.png"><meta property="article:published_time" content="2020-11-16T11:19:53.000Z"><meta property="article:modified_time" content="2020-12-03T07:49:05.001Z"><meta property="article:author" content="IMO"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/16007786247376.jpg"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://evilimo.com/2020/11/16/iOS%C2%B7%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/02-isa%E5%8E%9F%E7%90%86/"},"headline":"IMO's Blog","image":["https://cdn.jsdelivr.net/gh/speam/blogImgs@main/16007786247376.jpg","https://cdn.jsdelivr.net/gh/speam/blogImgs@main/16007786706178.jpg","https://cdn.jsdelivr.net/gh/speam/blogImgs@main/16007786783257.jpg","https://cdn.jsdelivr.net/gh/speam/blogImgs@main/16007786920476.jpg","https://cdn.jsdelivr.net/gh/speam/blogImgs@main/16007787059086.jpg","https://cdn.jsdelivr.net/gh/speam/blogImgs@main/16007787933363.jpg","https://cdn.jsdelivr.net/gh/speam/blogImgs@main/1-20201203115701181.png","https://cdn.jsdelivr.net/gh/speam/blogImgs@main/1-20201203115713735.png","https://cdn.jsdelivr.net/gh/speam/blogImgs@main/1-20201203115748854.png","https://cdn.jsdelivr.net/gh/speam/blogImgs@main/1-20201203115754021.png","https://cdn.jsdelivr.net/gh/speam/blogImgs@main/1-20201203115806235.png"],"datePublished":"2020-11-16T11:19:53.000Z","dateModified":"2020-12-03T07:49:05.001Z","author":{"@type":"Person","name":"IMO"},"description":""}</script><link rel="canonical" href="http://evilimo.com/2020/11/16/iOS%C2%B7%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/02-isa%E5%8E%9F%E7%90%86/"><link rel="icon" href="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/avatar4.png"><link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/font-awesome/5.4.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.loli.net/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><!--!--><!--!--><meta name="generator" content="Hexo 5.2.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/imglogo.png" alt="IMO&#039;s Blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">首页</a><a class="navbar-item" href="/archives">归档</a><a class="navbar-item" href="/categories">分类</a><a class="navbar-item" href="/about">关于</a></div><div class="navbar-end"><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-11-16T11:19:53.000Z" title="2020-11-16T11:19:53.000Z">2020-11-16</time>发表</span><span class="level-item"><time dateTime="2020-12-03T07:49:05.001Z" title="2020-12-03T07:49:05.001Z">2020-12-03</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/iOS%C2%B7%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/">iOS·底层原理</a></span></div></div><h1 class="title is-3 is-size-4-mobile">02 - isa原理</h1><div class="content"><hr>
+<a id="more"></a>
+
+<h1 id="02-isa原理"><a href="#02-isa原理" class="headerlink" title="02 - isa原理"></a>02 - isa原理</h1><h2 id="一、-前言"><a href="#一、-前言" class="headerlink" title="一、 前言"></a>一、 前言</h2><ul>
+<li>在<code>arm64</code>架构之前，<code>isa</code>仅仅是一个指针，保存着类对象或元类对象的内存地址</li>
+<li>在<code>arm64</code>架构之后,苹果对<code>isa</code>进行了优化,变成了一个<code>isa_t</code>类型的<code>联合体</code>结构,同时使用<strong>位域</strong>来存储更多的信息:</li>
+</ul>
+<p>对象的<code>isa</code>指针并不是直接指向类对象或者元类对象的内存地址，而是需要<code>&amp; ISA_MASK</code>才能获取类对象或者元类对象的地址。</p>
+<p><a target="_blank" rel="noopener" href="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/16007786247376.jpg"><img src="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/16007786247376.jpg" alt="img"></a></p>
+<h2 id="二、-内容补充"><a href="#二、-内容补充" class="headerlink" title="二、 内容补充"></a>二、 内容补充</h2><h3 id="2-1-位运算符"><a href="#2-1-位运算符" class="headerlink" title="2.1 位运算符"></a>2.1 位运算符</h3><ul>
+<li>位运算符用来对二进制位进行操作</li>
+<li>操作数只能为<strong>整型和字符型数据</strong>。</li>
+<li><code>C</code>语言中六种位运算符：<code>&amp;</code>按位与、<code>|</code>按位或、<code>^</code>按位异或、<code>~</code>非、<code>&lt;&lt;</code>左移和<code>&gt;&gt;</code>右移。 </li>
+</ul>
+<p><strong>1)按位与&amp;</strong></p>
+<p>有0出0,全1出1.</p>
+<table>
+<thead>
+<tr>
+<th>A</th>
+<th>B</th>
+<th>&amp;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody></table>
+<p><strong>2)按位或 |</strong></p>
+<p>有1出1,全0出0.</p>
+<table>
+<thead>
+<tr>
+<th>A</th>
+<th>B</th>
+<th>I</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody></table>
+<p><strong>3)按位异或^</strong></p>
+<p>相同为0,不同为1.</p>
+<table>
+<thead>
+<tr>
+<th>A</th>
+<th>B</th>
+<th>^</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody></table>
+<p><strong>4)非 ~</strong></p>
+<p>非运算即取反运算，在二进制中 1 变 0 ，0 变 1。例如<code>110101</code>进行非运算后为<code>001010</code>，即<code>1010</code>.</p>
+<p><strong>5)左移 &lt;&lt;</strong></p>
+<ul>
+<li>左移运算就是把<code>&lt;&lt;</code>左边的运算数的各二进位全部左移若干位，移动的位数即<code>&lt;&lt;</code>右边的数的数值。</li>
+<li>高位丢弃，低位补0。</li>
+<li>左移n位就是乘以2的n次方。例如：<code>a&lt;&lt;4</code>是指把a的各二进位向左移动4位。如原来a=00000011(十进制3)，左移4位后为00110000(十进制48)。</li>
+</ul>
+<p><strong>6)右移 &gt;&gt;</strong></p>
+<p>右移运算就是把<code>&gt;&gt;</code>左边的运算数的各二进位全部右移若干位，<code>&gt;&gt;</code>右边的数指定移动的位数。例如：设 a=15，a&gt;&gt;2 表示把00001111右移为00000011(十进制3)</p>
+<h3 id="2-2-位运算符的运用"><a href="#2-2-位运算符的运用" class="headerlink" title="2.2 位运算符的运用"></a>2.2 位运算符的运用</h3><p><strong>1)取值</strong></p>
+<ul>
+<li>可以利用<code>按位与 &amp;</code>运算取出指定位的值</li>
+<li>具体操作是想取出哪一位的值就将那一位置为1,其它位都为0,然后同原数据进行按位与计算,即可取出特定的位.</li>
+</ul>
+<blockquote>
+<p>例: <code>0000 0011</code>取出倒数第三位的值</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 想取出倒数第三位的值，就将倒数第三位的值置为1，其它位为0，跟原数据按位与运算</span><br><span class="line">  0000 0011		  (源码)</span><br><span class="line">&amp; 0000 0100		 （掩码）</span><br><span class="line">------------</span><br><span class="line">  0000 0000  &#x2F;&#x2F; 得出按位与运算后的结果，即可拿到原数据中倒数第三位的值为0</span><br><span class="line">  </span><br></pre></td></tr></table></figure>
+
+<p>上面的例子中,我们从<code>0000 0011</code>中取值,则有<code>0000 0011</code>被称之为源码.进行按位与操作设定的<code>0000 0100</code>称之为掩码.</p>
+<blockquote>
+<p>例: <code>0000 0011</code>取出后三位的值</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 想取出后三位的值，就将掩码后三位置为1，其它位为0，跟原数据按位与运算</span><br><span class="line">  0000 0011		  (源码)</span><br><span class="line">&amp; 0000 0111		 （掩码）</span><br><span class="line">------------</span><br><span class="line">  0000 0011  &#x2F;&#x2F; 得出按位与运算后的结果，即可拿到原数据中后三位的值为011</span><br><span class="line">  </span><br></pre></td></tr></table></figure>
+
+<p><strong>2)设值</strong></p>
+<ul>
+<li>可以通过<code>按位或 |</code>或者<code>按位与 &amp;</code>运算符将某一位的值设为1或0.</li>
+<li>要将某一位的值置为1的话，那么就将掩码中对应位的值设为1，掩码其它位为0，将源码与掩码进行<code>按位或|</code>操作即可.</li>
+</ul>
+<blockquote>
+<p>例: 将<code>0000 0011</code>倒数第三位的值改为1</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 改变倒数第三位的值，就将掩码倒数第三位的值置为1，其它位为0，跟源码按位或运算</span><br><span class="line">  0000 0011</span><br><span class="line">| 0000 0100</span><br><span class="line">------------</span><br><span class="line">  0000 0111  &#x2F;&#x2F; 即可将源码中倒数第三位的值改为1</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>要将某一位的值置为0的话，那么就将掩码中对应位的值设为0，掩码其它位为1，将源码与掩码进行<code>按位与&amp;</code>操作即可.</li>
+</ul>
+<blockquote>
+<p>例: 将<code>0000 0011</code>倒数第二位的值改为0</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 改变倒数第二位的值，就将掩码倒数第二位的值置为0，其它位为1，跟源码&#96;按位与&amp;&#96;运算</span><br><span class="line">  0000 0011</span><br><span class="line">| 1111 1101</span><br><span class="line">------------</span><br><span class="line">  0000 0001  &#x2F;&#x2F; 即可将源码中倒数第二位的值改为0</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>3)实际应用</strong></p>
+<p>声明一个<code>TCJCar</code>类，类中有四个<code>BOOL</code>类型的属性,分别为<code>front</code>、<code>back</code>、<code>left</code>、<code>right</code>,通过这四个属性来判断这辆小车的行驶方向.<br><a target="_blank" rel="noopener" href="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/16007786706178.jpg"><img src="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/16007786706178.jpg" alt="img"></a></p>
+<p>然后我们来查看一下这个<code>TCJCar</code>类对象所占据的内存大小:<br><a target="_blank" rel="noopener" href="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/16007786783257.jpg"><img src="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/16007786783257.jpg" alt="img"></a></p>
+<p>我们看到,一个<code>TCJCar</code>类的对象占据16个字节.其中包括一个<code>isa</code>指针和四个<code>BOOL</code>类型的属性,8+1+1+1+1=12,根据<strong>内存对齐</strong>原则,所以一个<code>TCJCar</code>类的对象占16个字节.</p>
+<p>我们知道,<code>BOOL</code>值只有两种情况:<code>0</code>或<code>1</code>，占据一个字节的内存空间.而一个字节的内存空间中又有8个二进制位，并且二进制同样只有<code>0</code>或<code>1</code>，那么我们完全可以使用1个二进制位来表示一个<code>BOOL</code>值。也就是说我们上面声明的四个<code>BOOL</code>值最终只使用4个二进制位就可以代替，这样就节省了内存空间。那我们如何实现呢？</p>
+<p>想要实现四个<code>BOOL</code>值存放在一个字节中，我们可以通过<code>char</code>类型的成员变量来实现。</p>
+<p><code>char</code>类型占一个字节内存空间，也就是8个二进制位.可以使用其中最后四个二进制位来存储4个<code>BOOL</code>值。 (当然不能把<code>char</code>类型写成属性,因为一旦写成属性,系统会自动帮我们添加成员变量,自动实现<code>set</code>和<code>get</code>方法)</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">TCJCar</span>()</span>&#123;</span><br><span class="line">    <span class="keyword">char</span> _frontBackLeftRight;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果我们赋值<code>_frontBackLeftRight</code>为<code>1</code>,即<code>0b 0000 0001</code>,只使用8个二进制位中的最后4个分别用<code>0</code>或者<code>1</code>来代表<code>front</code>、<code>back</code>、<code>left</code>、<code>right</code>的值.那么此时<code>front</code>、<code>back</code>、<code>left</code>、<code>right</code>的状态为:<br><a target="_blank" rel="noopener" href="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/16007786920476.jpg"><img src="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/16007786920476.jpg" alt="img"></a></p>
+<p>结合我们上文讲的6种位运算符以及使用场景,我们可以分别声明<code>front</code>、<code>back</code>、<code>left</code>、<code>right</code>的掩码,来方便我们进行下一步的位运算取值和赋值:</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> TCJDirectionFrontMask 0b00001000 <span class="comment">//此二进制数对应十进制数为 8</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> TCJDirectionBackMask  0b00000100 <span class="comment">//此二进制数对应十进制数为 4</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> TCJDirectionLeftMask  0b00000010 <span class="comment">//此二进制数对应十进制数为 2</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> TCJDirectionRightMask 0b00000001 <span class="comment">//此二进制数对应十进制数为 1</span></span></span><br></pre></td></tr></table></figure>
+
+<p>通过对位运算符的左移<code>&lt;&lt;</code>和右移<code>&gt;&gt;</code>的了解，我们可以将上面的代码优化成：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> TCJDirectionFrontMask    (1 &lt;&lt; 3)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> TCJDirectionBackMask     (1 &lt;&lt; 2)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> TCJDirectionLeftMask     (1 &lt;&lt; 1)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> TCJDirectionRightMask    (1 &lt;&lt; 0)</span></span><br></pre></td></tr></table></figure>
+
+<p>自定义的<code>set</code>方法如下:</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)setFront:(<span class="built_in">BOOL</span>)front</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (front) &#123;<span class="comment">// 如果需要将值置为1，将源码和掩码进行按位或运算</span></span><br><span class="line">        _frontBackLeftRight |= TCJDirectionFrontMask;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;<span class="comment">// 如果需要将值置为0 // 将源码和按位取反后的掩码进行按位与运算</span></span><br><span class="line">        _frontBackLeftRight &amp;= ~TCJDirectionFrontMask;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">- (<span class="keyword">void</span>)setBack:(<span class="built_in">BOOL</span>)back</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (back) &#123;</span><br><span class="line">        _frontBackLeftRight |= TCJDirectionBackMask;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        _frontBackLeftRight &amp;= ~TCJDirectionBackMask;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">- (<span class="keyword">void</span>)setLeft:(<span class="built_in">BOOL</span>)left</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (left) &#123;</span><br><span class="line">        _frontBackLeftRight |= TCJDirectionLeftMask;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        _frontBackLeftRight &amp;= ~TCJDirectionLeftMask;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">- (<span class="keyword">void</span>)setRight:(<span class="built_in">BOOL</span>)right</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (right) &#123;</span><br><span class="line">        _frontBackLeftRight |= TCJDirectionRightMask;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        _frontBackLeftRight &amp;= ~TCJDirectionRightMask;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>自定义的<code>get</code>方法如下:</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">BOOL</span>)isFront</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> !!(_frontBackLeftRight &amp; TCJDirectionFrontMask);</span><br><span class="line">&#125;</span><br><span class="line">- (<span class="built_in">BOOL</span>)isBack</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> !!(_frontBackLeftRight &amp; TCJDirectionBackMask);</span><br><span class="line">&#125;</span><br><span class="line">- (<span class="built_in">BOOL</span>)isLeft</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> !!(_frontBackLeftRight &amp; TCJDirectionLeftMask);</span><br><span class="line">&#125;</span><br><span class="line">- (<span class="built_in">BOOL</span>)isRight</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> !!(_frontBackLeftRight &amp; TCJDirectionRightMask);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此处需要注意的是，代码中!为逻辑运算符非，因为<code>_frontBackLeftRight &amp; TCJDirectionFrontMask</code>代码执行后，返回的肯定是一个整型数，如当<code>front</code>为<code>YES</code>时，说明二进制数为<code>0b 0000 1000</code>，对应的十进制数为8，那么进行一次逻辑非运算后，<code>!(8)</code>的值为<code>0</code>，对<code>0</code>再进行一次逻辑非运算<code>!(0)</code>，结果就成了<code>1</code>，那么正好跟<code>front</code>为<code>YES</code>对应.所以此处进行两次逻辑非运算，<code>!!</code>. 当然,还要实现初始化方法:</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">instancetype</span>)init</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">self</span> = [<span class="keyword">super</span> init];</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">self</span>) &#123;</span><br><span class="line">        _frontBackLeftRight = <span class="number">0</span>b00001000;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过测试验证,我们完成了取值和赋值:<br><a target="_blank" rel="noopener" href="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/16007787059086.jpg"><img src="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/16007787059086.jpg" alt="img"></a></p>
+<h3 id="2-3-位域"><a href="#2-3-位域" class="headerlink" title="2.3 位域"></a>2.3 位域</h3><p>有些信息在存储时，并不需要占用一个完整的字节(8个二进制位)， 而只需占几个或一个二进制位。“位域”是把一个字节中的二进位划分为几个不同的区域， 并说明每个区域的位数。每个区域就可以存储一段信息，这样就可以把信息用一个字节来表示。</p>
+<h3 id="2-4-联合体"><a href="#2-4-联合体" class="headerlink" title="2.4 联合体"></a>2.4 联合体</h3><p>这里通过与<code>struct</code>的对比来理解<code>union</code>:</p>
+<p>①两者都可以包含多个不同类型的数据，如<code>int</code>、<code>double</code>、<code>Class</code>等。</p>
+<p>②在<code>struct</code>中各成员有各自的内存空间，一个<code>struct</code>变量的内存总长度大于等于各成员内存长度之和；而在<code>union</code>中，各成员共享一段内存空间，一个<code>union</code>的内存总长度等于各成员中内存最长的那个成员的内存长度。</p>
+<p>③对<code>struct</code>中的成员进行赋值，不会影响其他成员的值；对<code>union</code>中的成员赋值时，每次只能给一个成员赋值，同时其它成员的值也就不存在了。</p>
+<p>写法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">union 联合体名&#123;</span><br><span class="line">    成员列表</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-5-oc-中的-GDB-调试"><a href="#2-5-oc-中的-GDB-调试" class="headerlink" title="2.5 oc 中的 GDB 调试"></a>2.5 oc 中的 GDB 调试</h3><h4 id="2-5-1-简介"><a href="#2-5-1-简介" class="headerlink" title="2.5.1 简介"></a>2.5.1 简介</h4><p>GDB（GNU Debugger）是UNIX及UNIX-like下的强大调试工具，可以调试ada, c, c++, asm, minimal, d, fortran, Objective-c, go, java,pascal等语言。</p>
+<h4 id="2-5-2-在-iOS-开发中的作用"><a href="#2-5-2-在-iOS-开发中的作用" class="headerlink" title="2.5.2 在 iOS 开发中的作用"></a>2.5.2 在 iOS 开发中的作用</h4><p>① 普通变量查看</p>
+<p>使用 p 变量名即可：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(gdb) p a</span><br><span class="line">$1 &#x3D; 10</span><br></pre></td></tr></table></figure>
+
+
+
+<p>② 打印指针指向内容</p>
+<p>如果还是使用上面的方式打印指针指向的内容，那么打印出来的只是指针地址而已，例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(gdb) p d</span><br><span class="line">$1 &#x3D; (int *) 0x602010</span><br></pre></td></tr></table></figure>
+
+
+
+<p>而如果想要打印指针指向的内容，需要解引用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(gdb) p *d</span><br><span class="line">$2 &#x3D; 0</span><br></pre></td></tr></table></figure>
+
+
+
+<p>③ 按照特定格式打印变量</p>
+<p>对于简单的数据，p默认的打印方式已经足够了，它会根据变量类型的格式打印出来，但是有时候这还不够，我们需要更多的格式控制。使用<code>格式控制字符</code>来控制</p>
+<p>正常方式打印字符数组c：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(gdb) p c</span><br><span class="line">$18 &#x3D; &quot;hello world&quot;</span><br></pre></td></tr></table></figure>
+
+<p>查看它的十六进制格式打印:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(gdb) p&#x2F;x c</span><br><span class="line">$19 &#x3D; &#123;0x68, 0x65, 0x6c, 0x6c, 0x6f, 0x2c, 0x73, 0x68, 0x6f, 0x75, 0x77, 0x61, </span><br><span class="line">  0x6e, 0x67, 0x0&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是如果我们想用这种方式查看浮点数的二进制格式是不行的，因为直接打印它首先会被转换成整型，因此最终会得到8：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(gdb) p e</span><br><span class="line">$1 &#x3D; 8.5</span><br><span class="line"></span><br><span class="line">(gdb) p&#x2F;t e</span><br><span class="line">$2 &#x3D; 1000</span><br></pre></td></tr></table></figure>
+
+
+
+<p>④ 查看内存内容</p>
+<p>examine(简写为x)可以用来查看内存地址中的值。语法如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x&#x2F;[n][f][u] addr</span><br></pre></td></tr></table></figure>
+
+<p>其中：</p>
+<ul>
+<li>n 表示要显示的<code>内存单元数</code>，默认值为1(想打多少段就写几)</li>
+<li>f 表示要打印的格式，通过<code>格式控制字符</code>控制</li>
+<li>u 要打印的<code>单元长度</code></li>
+<li>addr <code>内存地址</code></li>
+</ul>
+<blockquote>
+<p>格式控制字符：</p>
+<p>x 按十六进制格式显示变量【常用】</p>
+<p>d 按十进制格式显示变量</p>
+<p>u 按十六进制格式显示无符号整型</p>
+<p>o 按八进制格式显示变量</p>
+<p>t 按二进制格式显示变量</p>
+<p>a 按十六进制格式显示变量</p>
+<p>c 按字符格式显示变量</p>
+<p>f 按浮点数格式显示变量</p>
+</blockquote>
+<blockquote>
+<p>单元长度：</p>
+<p>g 八字节【常用】</p>
+<p>b 字节</p>
+<p>h 半字，即双字节</p>
+<p>w 字，即四字节</p>
+</blockquote>
+<p>举例：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">x/<span class="number">4</span>xg p				<span class="comment">// 打印 p 的内存内容</span></span><br><span class="line">  						<span class="comment">// 打4段内存内容</span></span><br><span class="line">  						<span class="comment">// 16进制打印</span></span><br><span class="line">  						<span class="comment">// 每段内存内容打印8字节</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="三、-isa-介绍"><a href="#三、-isa-介绍" class="headerlink" title="三、 isa 介绍"></a>三、 isa 介绍</h2><h3 id="3-1-前言"><a href="#3-1-前言" class="headerlink" title="3.1 前言"></a>3.1 前言</h3><p>回顾上篇文章中的代码:</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> __attribute__((always_inline)) </span><br><span class="line"><span class="keyword">id</span></span><br><span class="line">_class_createInstanceFromZone(Class cls, size_t extraBytes, <span class="keyword">void</span> *zone, </span><br><span class="line">                              <span class="keyword">bool</span> cxxConstruct = <span class="literal">true</span>, </span><br><span class="line">                              size_t *outAllocatedSize = <span class="literal">nil</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (!cls) <span class="keyword">return</span> <span class="literal">nil</span>;</span><br><span class="line"></span><br><span class="line">    assert(cls-&gt;isRealized());</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 一次读取类的信息位以提高性能</span></span><br><span class="line">    <span class="keyword">bool</span> hasCxxCtor = cls-&gt;hasCxxCtor();    <span class="comment">// 是否有构造函数</span></span><br><span class="line">    <span class="keyword">bool</span> hasCxxDtor = cls-&gt;hasCxxDtor();    <span class="comment">// 是否有析构函数</span></span><br><span class="line">    <span class="keyword">bool</span> fast = cls-&gt;canAllocNonpointer();  <span class="comment">// OC 2.0以上基本上返回的都是true</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 计算内存</span></span><br><span class="line">    size_t size = cls-&gt;instanceSize(extraBytes);</span><br><span class="line">    <span class="keyword">if</span> (outAllocatedSize) *outAllocatedSize = size;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">id</span> obj;</span><br><span class="line">    <span class="keyword">if</span> (!zone  &amp;&amp;  fast) &#123;</span><br><span class="line">        <span class="comment">// 分配1块大小为size的连续内存</span></span><br><span class="line">        obj = (<span class="keyword">id</span>)calloc(<span class="number">1</span>, size);</span><br><span class="line">        <span class="keyword">if</span> (!obj) <span class="keyword">return</span> <span class="literal">nil</span>;</span><br><span class="line">        <span class="comment">// 初始化对象的isa</span></span><br><span class="line">        obj-&gt;initInstanceIsa(cls, hasCxxDtor);</span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (zone) &#123;</span><br><span class="line">            obj = (<span class="keyword">id</span>)malloc_zone_calloc ((malloc_zone_t *)zone, <span class="number">1</span>, size);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            obj = (<span class="keyword">id</span>)calloc(<span class="number">1</span>, size);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (!obj) <span class="keyword">return</span> <span class="literal">nil</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Use raw pointer isa on the assumption that they might be </span></span><br><span class="line">        <span class="comment">// doing something weird with the zone or RR.</span></span><br><span class="line">        obj-&gt;initIsa(cls);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (cxxConstruct &amp;&amp; hasCxxCtor) &#123;</span><br><span class="line">        obj = _objc_constructOrFree(obj, cls);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> obj;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在上文中我们知道<code>alloc</code>底层会调用<code>calloc</code>分配内存，接着就是<code>initInstanceIsa(cls, hasCxxDtor)</code>，顾名思义是初始化对象的isa，其关键代码如下</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">inline</span> <span class="keyword">void</span> </span><br><span class="line">objc_object::initInstanceIsa(Class cls, <span class="keyword">bool</span> hasCxxDtor)</span><br><span class="line">&#123;</span><br><span class="line">    assert(!cls-&gt;instancesRequireRawIsa());</span><br><span class="line">    assert(hasCxxDtor == cls-&gt;hasCxxDtor());</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 留意这里的true</span></span><br><span class="line">    initIsa(cls, <span class="literal">true</span>, hasCxxDtor);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">inline</span> <span class="keyword">void</span> </span><br><span class="line">objc_object::initIsa(Class cls, <span class="keyword">bool</span> nonpointer, <span class="keyword">bool</span> hasCxxDtor) </span><br><span class="line">&#123; </span><br><span class="line">    assert(!isTaggedPointer()); </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (!nonpointer) &#123;</span><br><span class="line">        isa.cls = cls;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        assert(!DisableNonpointerIsa);</span><br><span class="line">        assert(!cls-&gt;instancesRequireRawIsa());</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">isa_t</span> <span class="title">newisa</span><span class="params">(<span class="number">0</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> SUPPORT_INDEXED_ISA</span></span><br><span class="line">        assert(cls-&gt;classArrayIndex() &gt; <span class="number">0</span>);</span><br><span class="line">        newisa.bits = ISA_INDEX_MAGIC_VALUE;</span><br><span class="line">        <span class="comment">// isa.magic is part of ISA_MAGIC_VALUE</span></span><br><span class="line">        <span class="comment">// isa.nonpointer is part of ISA_MAGIC_VALUE</span></span><br><span class="line">        newisa.has_cxx_dtor = hasCxxDtor;</span><br><span class="line">        newisa.indexcls = (<span class="keyword">uintptr_t</span>)cls-&gt;classArrayIndex();</span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line">        newisa.bits = ISA_MAGIC_VALUE;</span><br><span class="line">        <span class="comment">// isa.magic is part of ISA_MAGIC_VALUE</span></span><br><span class="line">        <span class="comment">// isa.nonpointer is part of ISA_MAGIC_VALUE</span></span><br><span class="line">        newisa.has_cxx_dtor = hasCxxDtor;</span><br><span class="line">        newisa.shiftcls = (<span class="keyword">uintptr_t</span>)cls &gt;&gt; <span class="number">3</span>;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">        isa = newisa;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p><code>Tagged Pointer</code>:</p>
+<p>据说，为了节省内存和提高执行效率，苹果提出了<code>Tagged Pointer</code>的概念。对于 64 位程序，引入<code>Tagged Pointer</code>后，相关逻辑能减少一半的内存占用，以及 <strong>3倍</strong> 的访问速度提升，<strong>100倍</strong> 的创建、销毁速度提升。</p>
+<p><code>Tagged Pointer</code>首次应用于<code>iPhone 5s</code>设备上，现在几乎都应用<code>Tagged Pointer</code>了。想了解更多关于<code>Tagged Pointer</code>的内容可参考： <a target="_blank" rel="noopener" href="https://www.infoq.cn/article/deep-understanding-of-tagged-pointer/">深入理解 Tagged Pointer</a>。</p>
+</blockquote>
+<h3 id="3-2-isa-的结构"><a href="#3-2-isa-的结构" class="headerlink" title="3.2 isa 的结构"></a>3.2 isa 的结构</h3><p>点击<code>objc_object::initIsa()</code>中的<code>isa</code>，发现<code>isa</code>是<code>isa_t</code>类型</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">union</span> isa_t &#123;</span><br><span class="line">    isa_t() &#123; &#125;</span><br><span class="line">    isa_t(uintptr_t value) : bits(value) &#123; &#125;</span><br><span class="line"></span><br><span class="line">    Class cls;</span><br><span class="line">    uintptr_t bits;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> defined(ISA_BITFIELD)</span></span><br><span class="line">    <span class="keyword">struct</span> &#123;</span><br><span class="line">        ISA_BITFIELD;  <span class="comment">// 位域</span></span><br><span class="line">    &#125;;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>而<code>isa_t</code>实际上是一个<code>union</code>，即联合体，占8个字节，它的特性就是共用内存，或者说是互斥，比如说如果cls赋值了就不在对<code>bits</code>进行赋值。</p>
+<h4 id="3-2-1-isa-的-bits-成员变量"><a href="#3-2-1-isa-的-bits-成员变量" class="headerlink" title="3.2.1 isa 的 bits 成员变量"></a>3.2.1 isa 的 bits 成员变量</h4><h4 id="3-2-2-isa的-cls-成员变量"><a href="#3-2-2-isa的-cls-成员变量" class="headerlink" title="3.2.2 isa的 cls 成员变量"></a>3.2.2 isa的 cls 成员变量</h4><p>它是<code>Class</code>类型，源码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">objc_class</span> *<span class="title">Class</span>;</span></span><br><span class="line"><span class="comment">// 顺便了解一下id的类型，显然id是个指针变量，它的值只有一个isa变量</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">objc_object</span> *<span class="title">id</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">objc_class</span> :</span> objc_object &#123;</span><br><span class="line">    <span class="comment">// Class ISA; </span></span><br><span class="line">    Class superclass;</span><br><span class="line">    <span class="keyword">cache_t</span> cache;             </span><br><span class="line">    <span class="keyword">class_data_bits_t</span> bits;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">class_rw_t</span> *<span class="title">data</span><span class="params">()</span> </span>&#123; </span><br><span class="line">        <span class="keyword">return</span> bits.data();</span><br><span class="line">    &#125;</span><br><span class="line">    ... <span class="comment">// 一些方法</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">objc_object</span> &#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">isa_t</span> isa;</span><br><span class="line">    </span><br><span class="line">    ... <span class="comment">// 一些公有、私有方法</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>从源码得知，<code>Class</code>实际上是<code>objc_class</code>结构体的指针变量，而<code>objc_class</code>又继承自<code>objc_object</code>（说明类本质上也是一个对象），因此<code>Class</code>这个结构体指针变量的值内部有一个<code>isa</code>成员变量（类型为<code>isa_t</code>），这个<code>isa</code>成员变量在<code>64位</code>CPU架构下是8字节，且排在<code>objc_class</code>结构体的前8字节。</p>
+<h4 id="3-2-3-isa-的位域"><a href="#3-2-3-isa-的位域" class="headerlink" title="3.2.3 isa 的位域"></a>3.2.3 isa 的位域</h4><p>查看<code>ISA_BITFIELD</code>：</p>
+<p>模拟器：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># <span class="meta-keyword">elif</span> __x86_64__</span></span><br><span class="line"><span class="meta">#   <span class="meta-keyword">define</span> ISA_MASK        0x00007ffffffffff8ULL</span></span><br><span class="line"><span class="meta">#   <span class="meta-keyword">define</span> ISA_MAGIC_MASK  0x001f800000000001ULL</span></span><br><span class="line"><span class="meta">#   <span class="meta-keyword">define</span> ISA_MAGIC_VALUE 0x001d800000000001ULL</span></span><br><span class="line"><span class="meta">#   <span class="meta-keyword">define</span> ISA_BITFIELD                                                        \</span></span><br><span class="line">      uintptr_t nonpointer        : <span class="number">1</span>;                                         \</span><br><span class="line">      uintptr_t has_assoc         : <span class="number">1</span>;                                         \</span><br><span class="line">      uintptr_t has_cxx_dtor      : <span class="number">1</span>;                                         \</span><br><span class="line">      uintptr_t shiftcls          : <span class="number">44</span>; <span class="comment">/*MACH_VM_MAX_ADDRESS 0x7fffffe00000*/</span> \</span><br><span class="line">      uintptr_t magic             : <span class="number">6</span>;                                         \</span><br><span class="line">      uintptr_t weakly_referenced : <span class="number">1</span>;                                         \</span><br><span class="line">      uintptr_t deallocating      : <span class="number">1</span>;                                         \</span><br><span class="line">      uintptr_t has_sidetable_rc  : <span class="number">1</span>;                                         \</span><br><span class="line">      uintptr_t extra_rc          : <span class="number">8</span></span><br><span class="line"><span class="meta">#   <span class="meta-keyword">define</span> RC_ONE   (1ULL&lt;&lt;56)</span></span><br><span class="line"><span class="meta">#   <span class="meta-keyword">define</span> RC_HALF  (1ULL&lt;&lt;7)</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>真机：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># <span class="meta-keyword">if</span> __arm64__</span></span><br><span class="line"><span class="meta">#   <span class="meta-keyword">define</span> ISA_MASK        0x0000000ffffffff8ULL</span></span><br><span class="line"><span class="meta">#   <span class="meta-keyword">define</span> ISA_MAGIC_MASK  0x000003f000000001ULL</span></span><br><span class="line"><span class="meta">#   <span class="meta-keyword">define</span> ISA_MAGIC_VALUE 0x000001a000000001ULL</span></span><br><span class="line"><span class="meta">#   <span class="meta-keyword">define</span> ISA_BITFIELD                                                      \</span></span><br><span class="line">      uintptr_t nonpointer        : <span class="number">1</span>;                                       \</span><br><span class="line">      uintptr_t has_assoc         : <span class="number">1</span>;                                       \</span><br><span class="line">      uintptr_t has_cxx_dtor      : <span class="number">1</span>;                                       \</span><br><span class="line">      uintptr_t shiftcls          : <span class="number">33</span>; <span class="comment">/*MACH_VM_MAX_ADDRESS 0x1000000000*/</span> \</span><br><span class="line">      uintptr_t magic             : <span class="number">6</span>;                                       \</span><br><span class="line">      uintptr_t weakly_referenced : <span class="number">1</span>;                                       \</span><br><span class="line">      uintptr_t deallocating      : <span class="number">1</span>;                                       \</span><br><span class="line">      uintptr_t has_sidetable_rc  : <span class="number">1</span>;                                       \</span><br><span class="line">      uintptr_t extra_rc          : <span class="number">19</span></span><br><span class="line"><span class="meta">#   <span class="meta-keyword">define</span> RC_ONE   (1ULL&lt;&lt;45)</span></span><br><span class="line"><span class="meta">#   <span class="meta-keyword">define</span> RC_HALF  (1ULL&lt;&lt;18)</span></span><br></pre></td></tr></table></figure>
+
+<p>首先明确一点，在<code>64位</code>CPU架构下<code>isa指针</code>的长度也是<code>8字节</code>，它可以存储足够多的内容，苹果为了优化性能，存储类地址只用了一部分位（<code>x86_64</code>下是44位，<code>arm64</code>下是33位），剩下的位用来存储一些其它信息。</p>
+<p>具体分析一下<code>ISA_BITFIELD</code>位域各成员的表示意义：</p>
+<ul>
+<li><code>nonpointer</code>：表示是否对isa指针开启指针优化。<ul>
+<li>0：不优化，是纯<code>isa指针</code>，当访问<code>isa</code>指针时，直接返回其成员变量<code>cls</code></li>
+<li>1：优化，即<code>isa 指针</code>内容不止是类地址，还包含了类的一些信息、对象的引用计数等。</li>
+</ul>
+</li>
+<li><code>has_assoc</code>：是否有关联对象。</li>
+<li><code>has_cxx_dtor</code>：该对象是否有C++或Objc的析构器。<ul>
+<li>如果有析构函数，则需要做一些析构的逻辑处理；</li>
+<li>如果没有，则可以更快的释放对象。</li>
+</ul>
+</li>
+<li><code>shiftcls</code>：<strong>存储类地址</strong>。开启指针优化的情况下，在 <code>x86_64</code> 架构有 <strong>44位</strong> 用来存储类地址，<code>arm64</code> 架构中占 <strong>33位</strong> 。</li>
+<li><code>magic</code>：用于调试器判断当前对象是真的对象，还是一段没有初始化的空间。</li>
+<li><code>weakly_referenced</code>：用于标识对象是否被指向或者曾经被指向一个<code>ARC</code>的弱变量，没有弱引用的对象释放的更快。</li>
+<li><code>deallocating</code>：标识对象是否正在释放内存。</li>
+<li><code>has_sidetable_rc</code>：对象的引用计数值是否有进位。</li>
+<li><code>extra_rc</code>：表示该对象的引用计数值。<ul>
+<li><code>extra_rc</code>只是存储了额外的引用计数，实际的引用计数公式：<code>实际引用计数 = extra_rc + 1</code>。这里占了8位，所以理论上可以存储的最大引用计数是：<code>2^8 - 1 + 1 = 256</code>（arm64CPU架构下的extra_rc占19位，可存储的最大引用计数为<code>2^19 - 1 + 1 = 524288</code>）。</li>
+<li>与<code>has_sidetable_rc</code>的关联：当对象的最大引用计数超过界限后，<code>has_sidetable_rc</code>的值为1，否则为0</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-5-isa的作用"><a href="#3-5-isa的作用" class="headerlink" title="3.5 isa的作用"></a>3.5 <code>isa</code>的作用</h3><p>从<code>objc_object</code>的结构可以说明，当系统为一个对象分配好内存，并初始化实例变量后，在这些对象的实例变量的结构体中的第一个就是<code>isa</code>。</p>
+<p>同时，通过对<code>isa</code>的位域说明，我们知道<code>shiftcls</code>存储的是类地址。在<code>arm64</code> 架构中占 <strong>33位</strong>。</p>
+<p>我们将<code>ISA_MASK</code>的值<code>0x0000000ffffffff8ULL</code>转化为二进制数分析一下:<br><a target="_blank" rel="noopener" href="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/16007787933363.jpg"><img src="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/16007787933363.jpg" alt="img"></a></p>
+<p>从图中可以看到<code>ISA_MASK</code>的值转化为二进制后中间有33位都为1，那么<code>isa指针</code>同<code>ISA_MASK</code>进行按位与运算就可以取出中间33位的值，这正是中间占33位的<code>shiftcls</code>，所以就取出了类对象和元类对象的内存地址信息。</p>
+<p>例：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/1-20201203115701181.png" alt="img"></p>
+<p>此时通过<code>lldb</code>命令调试</p>
+<p><img src="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/1-20201203115713735.png" alt="img"></p>
+<blockquote>
+<p>说明：</p>
+<ol>
+<li><code>0x001d800100001129</code>是<code>对象p</code>的<code>isa</code>值，通过<code>isa &amp; ISA_MASK</code>运算得到的<code>0x0000000100001128</code>就是<code>Person</code>类的地址</li>
+<li>证明【1】：通过<code>p/x Person.class</code>直接打印<code>Person</code>类地址，显然得到的是<code>0x0000000100001128</code>，如此【1】证明成立！</li>
+</ol>
+</blockquote>
+<p><strong>结论：<code>isa</code>将对象和类关联起来，起到了中间桥梁的作用。</strong></p>
+<h3 id="3-6-isa的初始化补充"><a href="#3-6-isa的初始化补充" class="headerlink" title="3.6 isa的初始化补充"></a>3.6 <code>isa</code>的初始化补充</h3><p>最后补充一下<code>isa</code>的初始化。还记得初始化<code>isa</code>的入口吗？是<code>initIsa(cls, true, hasCxxDtor);</code>，此时<code>nonpointer</code>的值是<code>true</code>，再看<code>SUPPORT_INDEXED_ISA</code>的定义</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">if</span> __ARM_ARCH_7K__ &gt;= 2  ||  (__arm64__ &amp;&amp; !__LP64__)</span></span><br><span class="line"><span class="meta">#   <span class="meta-keyword">define</span> SUPPORT_INDEXED_ISA 1</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line"><span class="meta">#   <span class="meta-keyword">define</span> SUPPORT_INDEXED_ISA 0</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
+<p>在<code>x86_64</code>下，<code>SUPPORT_INDEXED_ISA</code>是0，所以<code>isa</code>的初始化最终会来到</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">isa_t</span> <span class="title">newisa</span><span class="params">(<span class="number">0</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用ISA_MAGIC_VALUE(0x001d800000000001ULL)赋值给bits</span></span><br><span class="line"><span class="comment">// nonpointer为1，magic为1d，其他变量为零</span></span><br><span class="line">newisa.bits = ISA_MAGIC_VALUE;</span><br><span class="line"><span class="comment">// hasCxxDtor是从类的isa中取出的</span></span><br><span class="line">newisa.has_cxx_dtor = hasCxxDtor;</span><br><span class="line"><span class="comment">// 将cls右移3位后赋值给shiftcls</span></span><br><span class="line">newisa.shiftcls = (<span class="keyword">uintptr_t</span>)cls &gt;&gt; <span class="number">3</span>;</span><br><span class="line"></span><br><span class="line">isa = newisa;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>碍于篇幅，这里不继续深入<code>hasCxxDtor</code>。</p>
+</blockquote>
+<h2 id="四、isa-指向图"><a href="#四、isa-指向图" class="headerlink" title="四、isa 指向图"></a>四、isa 指向图</h2><p>在<code>OC</code>中，对象的方法并没有存储于对象的结构体中（如果每一个对象都保存了自己能执行的方法，那么对内存的占用有极大的影响）。</p>
+<p>当对象的<strong>实例方法</strong>被调用时，它通过自己的<code>isa</code>来查找对应的类，然后在所属类的 <code>class_data_bits_t</code>结构体中查找对应方法的实现。同时，每一个<code>objc_class</code> 也有一个指向自己的父类的指针<code>superclass</code>用来查找继承的方法。</p>
+<p>而当调用 <strong>类方法</strong> 时，它的查找流程是怎样的呢？对此<code>OC</code>的解决方案就是引入元类，来保证<strong>类方法也能通过相同的机制查找到</strong>。也就是说，类的<code>isa</code>指向的是元类。</p>
+<p>苹果官方<code>isa</code>指向图：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/1-20201203115748854.png" alt="img"></p>
+<p>接下来我们来验证一下吧。</p>
+<h3 id="4-1-准备工作"><a href="#4-1-准备工作" class="headerlink" title="4.1 准备工作"></a>4.1 准备工作</h3><p>创建<code>Teacher</code>类、<code>Person</code>类，其中<code>Person</code>类继承于<code>NSObject</code>，<code>Teacher</code>类继承于<code>Person</code>类。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/1-20201203115754021.png" alt="img"></p>
+<h3 id="4-2-验证过程"><a href="#4-2-验证过程" class="headerlink" title="4.2 验证过程"></a>4.2 验证过程</h3><p>1.获取<code>teacher</code>对象的类（结果是<code>Teacher</code>类，地址为<code>0x0000000100001230</code>）</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">(lldb) x/<span class="number">4</span>gx teacher</span><br><span class="line"><span class="number">0x100f59400</span>: <span class="number">0x001d800100001231</span> <span class="number">0x0000000000000000</span></span><br><span class="line"><span class="number">0x100f59410</span>: <span class="number">0x636f72504b575b2d</span> <span class="number">0x70756f7247737365</span></span><br><span class="line">  </span><br><span class="line">(lldb) p/x <span class="number">0x001d800100001231</span> &amp; <span class="number">0x00007ffffffffff8</span>  <span class="comment">// isa &amp; ISA_MASK</span></span><br><span class="line">(<span class="keyword">long</span>) $<span class="number">3</span> = <span class="number">0x0000000100001230</span>      <span class="comment">// 对象teacher的类地址</span></span><br><span class="line">  </span><br><span class="line">(lldb) po $<span class="number">3</span></span><br><span class="line">Teacher     <span class="comment">// 对象teacher的类</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>2.获取<code>Teacher</code>类的元类（结果是<code>Teacher元类</code>，地址为<code>0x0000000100001208</code>）</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">(lldb) x/<span class="number">4</span>gx Teacher.class</span><br><span class="line"><span class="number">0x100001230</span>: <span class="number">0x001d800100001209</span> <span class="number">0x00000001000011e0</span></span><br><span class="line"><span class="number">0x100001240</span>: <span class="number">0x0000000100f61150</span> <span class="number">0x0000000100000003</span></span><br><span class="line"></span><br><span class="line">(lldb) p/x <span class="number">0x001d800100001209</span> &amp; <span class="number">0x00007ffffffffff8</span>  <span class="comment">// isa &amp; ISA_MASK</span></span><br><span class="line">(<span class="keyword">long</span>) $<span class="number">5</span> = <span class="number">0x0000000100001208</span>      <span class="comment">// Teacher类的元类地址</span></span><br><span class="line">  </span><br><span class="line">(lldb) po $<span class="number">5</span></span><br><span class="line">Teacher     <span class="comment">// Teacher类的元类</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Teacher类 和 Teacher元类 地址不一样</p>
+</blockquote>
+<p>3.获取<code>person</code>对象的类（结果是<code>Person</code>类，地址为<code>0x00000001000011e0</code>），以及类的元类（结果是<code>Person元类</code>，地址为<code>0x00000001000011b8</code>）</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">(lldb) x/<span class="number">4</span>gx person</span><br><span class="line"><span class="number">0x100f60a30</span>: <span class="number">0x001d8001000011e1</span> <span class="number">0x0000000000000000</span></span><br><span class="line"><span class="number">0x100f60a40</span>: <span class="number">0x0000000000000002</span> <span class="number">0x00007fff9b855588</span></span><br><span class="line">  </span><br><span class="line">(lldb) p/x <span class="number">0x001d8001000011e1</span> &amp; <span class="number">0x00007ffffffffff8</span>  <span class="comment">// isa &amp; ISA_MASK</span></span><br><span class="line">(<span class="keyword">long</span>) $<span class="number">8</span> = <span class="number">0x00000001000011e0</span>      <span class="comment">// 对象person的类地址</span></span><br><span class="line">  </span><br><span class="line">(lldb) po $<span class="number">8</span></span><br><span class="line">Person      <span class="comment">// 对象person的类</span></span><br><span class="line"></span><br><span class="line">(lldb) x/<span class="number">4</span>gx Person.class</span><br><span class="line"><span class="number">0x1000011e0</span>: <span class="number">0x001d8001000011b9</span> <span class="number">0x0000000100b38140</span></span><br><span class="line"><span class="number">0x1000011f0</span>: <span class="number">0x0000000100f61030</span> <span class="number">0x0000000100000003</span></span><br><span class="line">  </span><br><span class="line">(lldb) p/x <span class="number">0x001d8001000011b9</span> &amp; <span class="number">0x00007ffffffffff8</span>  <span class="comment">// isa &amp; ISA_MASK</span></span><br><span class="line">(<span class="keyword">long</span>) $<span class="number">10</span> = <span class="number">0x00000001000011b8</span>     <span class="comment">// Person类的元类地址</span></span><br><span class="line">  </span><br><span class="line">(lldb) po $<span class="number">10</span></span><br><span class="line">Person      <span class="comment">// Person类的元类</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>4.获取<code>object</code>对象的类（结果是<code>NSObject</code>类，地址为<code>0x0000000100b38140</code>），以及类的元类（结果是<code>NSObject元类</code>，地址为<code>0x0000000100b380f0</code>）</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">(lldb) x/<span class="number">4</span>gx object</span><br><span class="line"><span class="number">0x100f5cc50</span>: <span class="number">0x001d800100b38141</span> <span class="number">0x0000000000000000</span></span><br><span class="line"><span class="number">0x100f5cc60</span>: <span class="number">0x70736e494b575b2d</span> <span class="number">0x574b57726f746365</span></span><br><span class="line">  </span><br><span class="line">(lldb) p/x <span class="number">0x001d800100b38141</span> &amp; <span class="number">0x00007ffffffffff8</span>  <span class="comment">// isa &amp; ISA_MASK</span></span><br><span class="line">(<span class="keyword">long</span>) $<span class="number">12</span> = <span class="number">0x0000000100b38140</span>     <span class="comment">// 对象object的类地址</span></span><br><span class="line">  </span><br><span class="line">(lldb) po $<span class="number">12</span>   </span><br><span class="line">NSObject    <span class="comment">// 对象object的类</span></span><br><span class="line"></span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">(lldb) x/<span class="number">4</span>gx NSObject.class</span><br><span class="line"><span class="number">0x100b38140</span>: <span class="number">0x001d800100b380f1</span> <span class="number">0x0000000000000000</span></span><br><span class="line"><span class="number">0x100b38150</span>: <span class="number">0x0000000101913060</span> <span class="number">0x0000000200000003</span></span><br><span class="line">  </span><br><span class="line">(lldb) p/x <span class="number">0x001d800100b380f1</span> &amp; <span class="number">0x00007ffffffffff8</span>  <span class="comment">// isa &amp; ISA_MASK</span></span><br><span class="line">(<span class="keyword">long</span>) $<span class="number">14</span> = <span class="number">0x0000000100b380f0</span>     <span class="comment">// NSObject类的元类地址</span></span><br><span class="line">  </span><br><span class="line">(lldb) po $<span class="number">14</span></span><br><span class="line">NSObject    <span class="comment">// NSObject类的元类</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>5.获取<code>Teacher元类</code>的元类，<code>Person元类</code>的元类，以及<code>NSObject元类</code>的元类</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">(lldb) x/<span class="number">4</span>gx <span class="number">0x0000000100001208</span>     <span class="comment">//  Teacher元类</span></span><br><span class="line"><span class="number">0x100001208</span>: <span class="number">0x001d800100b380f1</span> <span class="number">0x00000001000011b8</span></span><br><span class="line"><span class="number">0x100001218</span>: <span class="number">0x000000010186f950</span> <span class="number">0x0000000400000007</span></span><br><span class="line">  </span><br><span class="line">(lldb) p/x <span class="number">0x001d800100b380f1</span> &amp; <span class="number">0x00007ffffffffff8</span>  <span class="comment">// isa &amp; ISA_MASK</span></span><br><span class="line">(<span class="keyword">long</span>) $<span class="number">16</span> = <span class="number">0x0000000100b380f0</span>     <span class="comment">// NSObject元类</span></span><br><span class="line">  </span><br><span class="line">(lldb) po $<span class="number">16</span></span><br><span class="line">NSObject    <span class="comment">// NSObject元类</span></span><br><span class="line"></span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">(lldb) x/<span class="number">4</span>gx <span class="number">0x00000001000011b8</span>     <span class="comment">// Person元类</span></span><br><span class="line"><span class="number">0x1000011b8</span>: <span class="number">0x001d800100b380f1</span> <span class="number">0x0000000100b380f0</span></span><br><span class="line"><span class="number">0x1000011c8</span>: <span class="number">0x0000000101905a50</span> <span class="number">0x0000000300000007</span></span><br><span class="line">  </span><br><span class="line">(lldb) p/x <span class="number">0x001d800100b380f1</span> &amp; <span class="number">0x00007ffffffffff8</span>  <span class="comment">// isa &amp; ISA_MASK</span></span><br><span class="line">(<span class="keyword">long</span>) $<span class="number">17</span> = <span class="number">0x0000000100b380f0</span>     <span class="comment">// NSObject元类</span></span><br><span class="line">  </span><br><span class="line">(lldb) po $<span class="number">17</span></span><br><span class="line">NSObject    <span class="comment">// NSObject元类</span></span><br><span class="line"></span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">(lldb) x/<span class="number">4</span>gx <span class="number">0x0000000100b380f0</span>     <span class="comment">// NSObject元类</span></span><br><span class="line"><span class="number">0x100b380f0</span>: <span class="number">0x001d800100b380f1</span> <span class="number">0x0000000100b38140</span></span><br><span class="line"><span class="number">0x100b38100</span>: <span class="number">0x0000000101903820</span> <span class="number">0x0000000500000007</span></span><br><span class="line">  </span><br><span class="line">(lldb) p/x <span class="number">0x001d800100b380f1</span> &amp; <span class="number">0x00007ffffffffff8</span>  <span class="comment">// isa &amp; ISA_MASK</span></span><br><span class="line">(<span class="keyword">long</span>) $<span class="number">18</span> = <span class="number">0x0000000100b380f0</span>     <span class="comment">// NSObject元类</span></span><br><span class="line">  </span><br><span class="line">(lldb) po $<span class="number">18</span></span><br><span class="line">NSObject    <span class="comment">// NSObject元类</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4-3-isa指向结论"><a href="#4-3-isa指向结论" class="headerlink" title="4.3 isa指向结论"></a>4.3 <code>isa</code>指向结论</h3><p><img src="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/1-20201203115806235.png" alt="img"></p>
+<p>基于【4.2】的验证过程，可以得出结论：</p>
+<ul>
+<li><p>对象的isa指针指向<code>对象的所属类</code></p>
+</li>
+<li><p>类的isa指针指向<code>类的元类</code></p>
+</li>
+<li><p>元类的isa指针指向<code>根元类</code></p>
+</li>
+</ul>
+<ul>
+<li>根元类的isa指针指向<code>他自己</code>(形成闭环)</li>
+</ul>
+<h3 id="4-4-继承关系的证明"><a href="#4-4-继承关系的证明" class="headerlink" title="4.4 继承关系的证明"></a>4.4 继承关系的证明</h3><p>类的继承关系证明过程：（以 -&gt; 表示 继承自）</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(lldb) <span class="function">p <span class="title">class_getSuperclass</span><span class="params">(Teacher.class)</span></span></span><br><span class="line">(Class) $19 = Person    // Teacher类 -&gt; Person类</span><br><span class="line"></span><br><span class="line">(lldb) <span class="function">p <span class="title">class_getSuperclass</span><span class="params">(Person.class)</span></span></span><br><span class="line">(Class) $20 = NSObject  // Person类 -&gt; NSObject类</span><br><span class="line"></span><br><span class="line">(lldb) <span class="function">p <span class="title">class_getSuperclass</span><span class="params">(NSObject.class)</span></span></span><br><span class="line">(Class) $21 = nil       // NSObject类 -&gt; nil</span><br></pre></td></tr></table></figure>
+
+
+
+<p>元类的继承关系证明过程：（以 -&gt; 表示 继承自）</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 0x0000000100001208 是 Teacher元类</span></span><br><span class="line">(lldb) p/<span class="function">x <span class="title">class_getSuperclass</span><span class="params">((Class)<span class="number">0x0000000100001208</span>)</span></span></span><br><span class="line">(Class) $17 = 0x00000001000011b8    // Person元类</span><br><span class="line">(lldb) po $<span class="number">17</span></span><br><span class="line">Person      <span class="comment">// Teacher元类 -&gt; Person元类</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 0x00000001000011b8 是 Person元类</span></span><br><span class="line">(lldb) p/<span class="function">x <span class="title">class_getSuperclass</span><span class="params">((Class)<span class="number">0x00000001000011b8</span>)</span></span></span><br><span class="line">(Class) $22 = 0x0000000100b380f0    // NSObject元类（根元类）</span><br><span class="line">(lldb) po $<span class="number">22</span></span><br><span class="line">NSObject    <span class="comment">// Person元类 -&gt; 根元类</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 0x0000000100b380f0 是 根元类</span></span><br><span class="line">(lldb) p/<span class="function">x <span class="title">class_getSuperclass</span><span class="params">((Class)<span class="number">0x0000000100b380f0</span>)</span></span></span><br><span class="line">(Class) $23 = 0x0000000100b38140 NSObject   // NSObject类（根类）</span><br><span class="line">(lldb) po $<span class="number">23</span></span><br><span class="line">NSObject    <span class="comment">// 根元类 -&gt; 根类</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>根元类继承自根类（NSObject元类 -&gt; NSObject类），根类继承自nil（NSObject类 -&gt; nil）</p>
+</blockquote>
+<h2 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a>五、总结</h2><p>1.<code>isa</code>是<code>isa_t</code>结构，采用 <strong>联合体+位域</strong> 的搭配来设计：在不同的位上显示不同的内容，以此来节省储存空间，进而优化内存。</p>
+<p>2.<code>isa</code>包含了<code>cls</code>和<code>bits</code>两个成员变量，这两个成员变量在<code>64位</code>CPU架构下的长度都是8字节，所以<code>isa</code>在<code>64位</code>CPU架构下的长度也是8字节。</p>
+<p>3.<code>isa</code>的位域上存储了一些对象与类的信息，并将对象与类关联起来，起到中间桥梁的作用。</p>
+<p>4.指向图相关结论：</p>
+<ul>
+<li>继承<ul>
+<li>子类 -&gt; 父类 -&gt; 根类(NSObject)</li>
+<li>子元类 -&gt; 父元类 -&gt; 根元类</li>
+<li>!!! 根元类 -&gt; 根类 (NSObject) 形成闭环</li>
+</ul>
+</li>
+<li>isa 指向<ul>
+<li>实例对象 isa -&gt; 类对象</li>
+<li>类对象 isa -&gt; 元类对象</li>
+<li>元类对象 isa -&gt; 根元类对象</li>
+<li>根元类对象 isa -&gt; 他自己(形成闭环)</li>
+</ul>
+</li>
+</ul>
+<h2 id="六、源码"><a href="#六、源码" class="headerlink" title="六、源码"></a>六、源码</h2><p><a target="_blank" rel="noopener" href="https://github.com/speam/mallcoSource.git">我的 malloc 源码</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/speam/OjbcSuorce.git">我的 libobjc 源码</a></p>
+<p>[苹果官方 objc4 源码](</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a target="_blank" rel="noopener" href="https://juejin.im/post/6844904053277720584#heading-3">OC源码分析之isa</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.yanbinghu.com/2019/04/20/41283.html">GDB调试指南</a></p>
+</div><!--!--></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2020/11/18/iOS%C2%B7%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/03-%E7%B1%BB%E7%9A%84%E7%BB%93%E6%9E%84/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">03 - 类的结构</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2020/10/29/iOS%C2%B7%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/01-%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%88%9B%E5%BB%BA/"><span class="level-item">01-对象的创建</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><!--!--></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1 is-sticky"><div class="card widget" id="toc" style="max-height: 1400px;overflow: auto;"><div class="card-content"><div class="menu"><h3 class="menu-label">目录</h3><ul class="menu-list"><li><a class="level is-mobile" href="#02-isa原理"><span class="level-left"><span class="level-item">02 - isa原理</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#一、-前言"><span class="level-left"><span class="level-item">一、 前言</span></span></a></li><li><a class="level is-mobile" href="#二、-内容补充"><span class="level-left"><span class="level-item">二、 内容补充</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#2-1-位运算符"><span class="level-left"><span class="level-item">2.1 位运算符</span></span></a></li><li><a class="level is-mobile" href="#2-2-位运算符的运用"><span class="level-left"><span class="level-item">2.2 位运算符的运用</span></span></a></li><li><a class="level is-mobile" href="#2-3-位域"><span class="level-left"><span class="level-item">2.3 位域</span></span></a></li><li><a class="level is-mobile" href="#2-4-联合体"><span class="level-left"><span class="level-item">2.4 联合体</span></span></a></li><li><a class="level is-mobile" href="#2-5-2-在-iOS-开发中的作用"><span class="level-left"><span class="level-item">2.5.2 在 iOS 开发中的作用</span></span></a></li></ul></li><li><a class="level is-mobile" href="#三、-isa-介绍"><span class="level-left"><span class="level-item">三、 isa 介绍</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#3-1-前言"><span class="level-left"><span class="level-item">3.1 前言</span></span></a></li><li><a class="level is-mobile" href="#3-2-3-isa-的位域"><span class="level-left"><span class="level-item">3.2.3 isa 的位域</span></span></a></li><li><a class="level is-mobile" href="#3-5-isa的作用"><span class="level-left"><span class="level-item">3.5 isa的作用</span></span></a></li><li><a class="level is-mobile" href="#3-6-isa的初始化补充"><span class="level-left"><span class="level-item">3.6 isa的初始化补充</span></span></a></li></ul></li><li><a class="level is-mobile" href="#四、isa-指向图"><span class="level-left"><span class="level-item">四、isa 指向图</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#4-1-准备工作"><span class="level-left"><span class="level-item">4.1 准备工作</span></span></a></li><li><a class="level is-mobile" href="#4-2-验证过程"><span class="level-left"><span class="level-item">4.2 验证过程</span></span></a></li><li><a class="level is-mobile" href="#4-3-isa指向结论"><span class="level-left"><span class="level-item">4.3 isa指向结论</span></span></a></li><li><a class="level is-mobile" href="#4-4-继承关系的证明"><span class="level-left"><span class="level-item">4.4 继承关系的证明</span></span></a></li></ul></li><li><a class="level is-mobile" href="#五、总结"><span class="level-left"><span class="level-item">五、总结</span></span></a></li><li><a class="level is-mobile" href="#六、源码"><span class="level-left"><span class="level-item">六、源码</span></span></a></li><li><a class="level is-mobile" href="#参考资料"><span class="level-left"><span class="level-item">参考资料</span></span></a></li></ul></li></ul></div></div><style>.menu-list > li > a.is-active + .menu-list { display: block; }.menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="https://cdn.jsdelivr.net/gh/speam/blogImgs@main/imglogo.png" alt="IMO&#039;s Blog" height="28"></a><p class="is-size-7"><span>&copy; 2020 IMO</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/speam"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" async></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>
