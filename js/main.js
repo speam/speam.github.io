@@ -134,5 +134,4 @@
         $mask.on('click', toggleToc);
         $('.navbar-main .catalogue').on('click', toggleToc);
     }
-	
 }(jQuery, window.moment, window.ClipboardJS, window.IcarusThemeSettings));
